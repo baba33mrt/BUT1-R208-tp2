@@ -1,50 +1,59 @@
-def add_person(people_table, first_name, last_name, gender, birth_date):
-    new_person = {'first_name': first_name, 'last_name': last_name, 'gender': gender, 'birth_date': birth_date}
-    people_table.append(new_person)
+def add(array, FirstName, LastName, gender, birth_date):
+    array.append([FirstName, LastName, gender, birth_date])
 
 
-def select_person():
-    person_id = int(input("Entrez le numéro de la personne : "))
-    return person_id
+def select_person(array, firstName, LastName):
+    i = 0
+    while i < len(array):
+        if array[i][0] == firstName and array[i][1] == LastName:
+            return i
 
 
-def add_parent_child_link(link_table, parent_id, child_id):
-    link_table.append((child_id, parent_id))
+def viewTab(array):
+    i = 0
+    string = 'Nom\t\tPrénom\tSex\tDate de naissance\n'
+    while i < len(array):
+        j = 0
+        while j < len(array[i]):
+            string = string + f'{array[i][j]}\t'
+            j = j + 1
+        i = i + 1
+        string = string + '\n'
+    print(string)
 
 
-def get_ancestors(link_table, person_id):
+def link(link_table, parent_id, child_id):
+    link_table.append([child_id, parent_id])
+
+
+def getAscendants(link_table, person_id):
     ancestors = []
     for link in link_table:
         if link[0] == person_id:
             ancestors.append(link[1])
-            ancestors += get_ancestors(link_table, link[1])
+            ancestors += getAscendants(link_table, link[1])
     return ancestors
 
 
-def get_descendants(link_table, person_id):
+def getDescendants(link_table, person_id):
     descendants = []
     for link in link_table:
         if link[1] == person_id:
             descendants.append(link[0])
-            descendants += get_descendants(link_table, link[0])
+            descendants += getDescendants(link_table, link[0])
     return descendants
 
 
-def get_siblings(link_table, person_id):
+def getFrere(link_table, person_id):
     siblings = []
     for link in link_table:
-        if link[0] != person_id and link[1] in get_ancestors(link_table, person_id):
+        if link[0] != person_id and link[1] in getAscendants(link_table, person_id):
             siblings.append(link[0])
     return siblings
 
 
-def sort_people_by_name(people_table):
-    sorted_people = sorted(people_table, key=lambda x: (x['last_name'], x['first_name']))
-    return sorted_people
 
+tab1, tab2 = [], []
+add(tab1, 'John', 'Fern', 'H', (1, 3, 1993))
 
-def sort_people_by_age(people_table):
-    sorted_people = sorted(people_table, key=lambda x: x['birth_date'])
-    return sorted_people
-
-
+viewTab(tab1)
